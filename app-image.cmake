@@ -57,9 +57,9 @@ function(add_app_image target)
 
   set(app_image_tool "${CMAKE_CURRENT_BINARY_DIR}/appimagetool.AppImage")
 
-	if(NOT ARGV_DESTINATION)
-		set(ARGV_DESTINATION ${ARGV_NAME}.AppImage)
-	endif()
+  if(NOT ARGV_DESTINATION)
+    set(ARGV_DESTINATION ${ARGV_NAME}.AppImage)
+  endif()
 
   cmake_path(ABSOLUTE_PATH ARGV_DESTINATION BASE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}" NORMALIZE)
 
@@ -71,23 +71,23 @@ function(add_app_image target)
     string(APPEND ARGV_APP_DIR ".AppDir")
   endif()
 
-	if(ARGV_ICON)
-	  cmake_path(ABSOLUTE_PATH ARGV_ICON NORMALIZE)
-	endif()
+  if(ARGV_ICON)
+    cmake_path(ABSOLUTE_PATH ARGV_ICON NORMALIZE)
+  endif()
 
   if(ARGV_TARGET)
     set(ARGV_EXECUTABLE $<TARGET_FILE:${ARGV_TARGET}>)
 
-		set(ARGV_EXECUTABLE_NAME $<TARGET_FILE_NAME:${ARGV_TARGET}>)
-	else()
-	  cmake_path(ABSOLUTE_PATH ARGV_EXECUTABLE NORMALIZE)
+    set(ARGV_EXECUTABLE_NAME $<TARGET_FILE_NAME:${ARGV_TARGET}>)
+  else()
+    cmake_path(ABSOLUTE_PATH ARGV_EXECUTABLE NORMALIZE)
 
-		cmake_path(GET ARGV_EXECUTABLE FILENAME ARGV_EXECUTABLE_NAME)
+    cmake_path(GET ARGV_EXECUTABLE FILENAME ARGV_EXECUTABLE_NAME)
   endif()
 
   download_app_image_run(DESTINATION "${ARGV_APP_DIR}/AppRun")
 
-	list(JOIN ARGV_CATEGORIES ";" ARGV_CATEGORIES)
+  list(JOIN ARGV_CATEGORIES ";" ARGV_CATEGORIES)
 
   file(READ "${app_image_module_root}/App.desktop" template)
 
@@ -95,22 +95,22 @@ function(add_app_image target)
 
   file(GENERATE OUTPUT "${ARGV_APP_DIR}/${ARGV_NAME}.desktop" CONTENT "${template}" NEWLINE_STYLE UNIX)
 
-	if(ARGV_ICON)
-		configure_file("${ARGV_ICON}" "${ARGV_APP_DIR}/icon.png" COPYONLY)
-	endif()
+  if(ARGV_ICON)
+    configure_file("${ARGV_ICON}" "${ARGV_APP_DIR}/icon.png" COPYONLY)
+  endif()
 
-	add_custom_target(
-		${target}_bin
+  add_custom_target(
+    ${target}_bin
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ARGV_EXECUTABLE}" "${ARGV_APP_DIR}/usr/bin/${ARGV_EXECUTABLE_NAME}"
-	)
+  )
 
-	list(APPEND ARGV_DEPENDS ${target}_bin)
+  list(APPEND ARGV_DEPENDS ${target}_bin)
 
-	add_custom_command(
+  add_custom_command(
     OUTPUT "${ARGV_DESTINATION}"
-		COMMAND "${app_image_tool}" --no-appstream "${ARGV_APP_DIR}" "${ARGV_DESTINATION}"
-		DEPENDS ${ARGV_DEPENDS}
-	)
+    COMMAND "${app_image_tool}" --no-appstream "${ARGV_APP_DIR}" "${ARGV_DESTINATION}"
+    DEPENDS ${ARGV_DEPENDS}
+  )
 
   add_custom_target(
     ${target}
