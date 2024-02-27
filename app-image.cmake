@@ -96,25 +96,21 @@ function(add_app_image target)
   file(GENERATE OUTPUT "${ARGV_APP_DIR}/${ARGV_NAME}.desktop" CONTENT "${template}" NEWLINE_STYLE UNIX)
 
   if(ARGV_ICON)
-    configure_file("${ARGV_ICON}" "${ARGV_APP_DIR}/icon.png" COPYONLY)
+    list(APPEND commands
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ARGV_ICON}" "${ARGV_APP_DIR}/icon.png"
+    )
   endif()
 
-  add_custom_target(
-    ${target}_bin
+  list(APPEND commands
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ARGV_EXECUTABLE}" "${ARGV_APP_DIR}/usr/bin/${ARGV_EXECUTABLE_NAME}"
-  )
 
-  list(APPEND ARGV_DEPENDS ${target}_bin)
-
-  add_custom_command(
-    OUTPUT "${ARGV_DESTINATION}"
     COMMAND "${app_image_tool}" --no-appstream "${ARGV_APP_DIR}" "${ARGV_DESTINATION}"
-    DEPENDS ${ARGV_DEPENDS}
   )
 
   add_custom_target(
     ${target}
     ALL
-    DEPENDS "${ARGV_DESTINATION}"
+    ${commands}
+    DEPENDS ${ARGV_DEPENDS}
   )
 endfunction()
