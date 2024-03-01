@@ -13,8 +13,12 @@ set(app_image_download_base "https://github.com/AppImage/AppImageKit/releases/do
 set(app_image_download_release "13")
 
 function(download_app_image_run)
+  set(one_value_keywords
+    DESTINATION
+  )
+
   cmake_parse_arguments(
-    PARSE_ARGV 0 ARGV "" "DESTINATION" ""
+    PARSE_ARGV 0 ARGV "" "${one_value_keywords}" ""
   )
 
   cmake_path(ABSOLUTE_PATH ARGV_DESTINATION BASE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}" NORMALIZE)
@@ -31,8 +35,12 @@ function(download_app_image_run)
 endfunction()
 
 function(download_app_image_tool)
+  set(one_value_keywords
+    DESTINATION
+  )
+
   cmake_parse_arguments(
-    PARSE_ARGV 0 ARGV "" "DESTINATION" ""
+    PARSE_ARGV 0 ARGV "" "${one_value_keywords}" ""
   )
 
   cmake_path(ABSOLUTE_PATH ARGV_DESTINATION BASE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}" NORMALIZE)
@@ -49,8 +57,23 @@ function(download_app_image_tool)
 endfunction()
 
 function(add_app_image target)
+  set(one_value_keywords
+    DESTINATION
+    NAME
+    DESCRIPTION
+    ICON
+    CATEGORY
+    TARGET
+    EXECUTABLE
+    APP_DIR
+  )
+
+  set(multi_value_keywords
+    DEPENDS
+  )
+
   cmake_parse_arguments(
-    PARSE_ARGV 1 ARGV "" "DESTINATION;NAME;ICON;TARGET;EXECUTABLE;APP_DIR" "CATEGORIES"
+    PARSE_ARGV 1 ARGV "" "${one_value_keywords}" "${multi_value_keywords}"
   )
 
   download_app_image_tool(DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/appimagetool.AppImage")
@@ -96,10 +119,32 @@ function(add_app_image target)
   file(GENERATE OUTPUT "${ARGV_APP_DIR}/${ARGV_NAME}.desktop" CONTENT "${template}" NEWLINE_STYLE UNIX)
 
   if(ARGV_ICON)
-    list(APPEND commands
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ARGV_ICON}" "${ARGV_APP_DIR}/icon.png"
-    )
+    list(APPEND ARGV_RESOURCES FILE "${ARGV_ICON}" "icon.png")
   endif()
+
+  while(TRUE)
+    list(LENGTH ARGV_RESOURCES len)
+
+    if(len LESS 3)
+      break()
+    endif()
+
+    list(POP_FRONT ARGV_RESOURCES type from to)
+
+    cmake_path(ABSOLUTE_PATH from NORMALIZE)
+
+    if(type MATCHES "FILE")
+      set(command copy_if_different)
+    elseif(type MATCHES "DIR")
+      set(command copy_directory_if_different)
+    else()
+      continue()
+    endif()
+
+    list(APPEND commands
+      COMMAND ${CMAKE_COMMAND} -E ${command} "${from}" "${ARGV_APP_DIR}/${to}"
+    )
+  endwhile()
 
   list(APPEND commands
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ARGV_EXECUTABLE}" "${ARGV_APP_DIR}/usr/bin/${ARGV_EXECUTABLE_NAME}"
