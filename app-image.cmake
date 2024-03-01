@@ -69,6 +69,7 @@ function(add_app_image target)
   )
 
   set(multi_value_keywords
+    RESOURCES
     DEPENDS
   )
 
