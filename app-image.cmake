@@ -111,8 +111,6 @@ function(add_app_image target)
 
   download_app_image_run(DESTINATION "${ARGV_APP_DIR}/AppRun")
 
-  list(JOIN ARGV_CATEGORIES ";" ARGV_CATEGORIES)
-
   file(READ "${app_image_module_root}/App.desktop" template)
 
   string(CONFIGURE "${template}" template)
