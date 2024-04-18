@@ -1,30 +1,42 @@
 # cmake-app-image
+
 CMake functions for packaging Pear applications into AppImages for Linux.
 
 ## API
 
 #### `download_app_image_run`
+
 Downloads the AppRun runtime component, required for executing AppImages.
+
+```cmake
+download_app_image_run(DESTINATION <path>)
+```
 
 ##### `DESTINATION <path>`
 The desired location to save the downloaded AppRun file.
 
 #### `download_app_image_tool`
+
 Fetches the AppImageTool utility, used to create and package AppImages.
 
+```cmake
+download_app_image_tool(DESTINATION <path>)
+```
+
 ##### `DESTINATION <path>`
-The directory where the appimagetool file will be saved.
+The directory where the AppImageTool file will be saved.
 
 #### `add_app_image`
+
 The core function to define and generate an AppImage for the application.
 
 ```cmake
 add_app_image(
-  <target> 
-  [DESTINATION <path>] 
-  NAME <string> 
-  DESCRIPTION <string> 
-  [ICON <path>] 
+  <target>
+  [DESTINATION <path>]
+  NAME <string>
+  DESCRIPTION <string>
+  [ICON <path>]
   [CATEGORY <string>]
   [TARGET <target>]
   [EXECUTABLE <path>]
@@ -38,7 +50,7 @@ add_app_image(
 The name of the CMake target to create.
 
 ##### `DESTINATION <path>`
-The output path for the generated AppImage file. Defaults to `"${NAME}.AppImage".
+The output path for the generated AppImage file. Defaults to `"${NAME}.AppImage"`.
 
 ##### `NAME <string>`
 The name of the application.
