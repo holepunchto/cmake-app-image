@@ -1,4 +1,6 @@
-set(app_image_module_root ${CMAKE_CURRENT_LIST_DIR})
+include_guard(GLOBAL)
+
+set(app_image_module_dir "${CMAKE_CURRENT_LIST_DIR}")
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
   set(app_image_arch aarch64)
@@ -111,7 +113,7 @@ function(add_app_image target)
 
   download_app_image_run(DESTINATION "${ARGV_APP_DIR}/AppRun")
 
-  file(READ "${app_image_module_root}/App.desktop" template)
+  file(READ "${app_image_module_dir}/App.desktop" template)
 
   string(CONFIGURE "${template}" template)
 
