@@ -123,6 +123,8 @@ function(add_app_image target)
     list(APPEND ARGV_RESOURCES FILE "${ARGV_ICON}" "icon.png")
   endif()
 
+  set(commands)
+
   while(TRUE)
     list(LENGTH ARGV_RESOURCES len)
 
