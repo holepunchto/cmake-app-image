@@ -2,18 +2,6 @@ include_guard()
 
 set(app_image_module_dir "${CMAKE_CURRENT_LIST_DIR}")
 
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
-  set(app_image_arch aarch64)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
-  set(app_image_arch x86_64)
-else()
-  message(FATAL_ERROR "Unsupported AppImage architecture '${CMAKE_SYSTEM_PROCESSOR}'")
-endif()
-
-set(app_image_download_base "https://github.com/AppImage/AppImageKit/releases/download")
-
-set(app_image_download_release "13")
-
 function(download_app_image_run)
   set(one_value_keywords
     DESTINATION
@@ -24,6 +12,18 @@ function(download_app_image_run)
   )
 
   cmake_path(ABSOLUTE_PATH ARGV_DESTINATION BASE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}" NORMALIZE)
+
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+    set(app_image_arch aarch64)
+  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+    set(app_image_arch x86_64)
+  else()
+    message(FATAL_ERROR "Unsupported AppImage architecture \"${CMAKE_SYSTEM_PROCESSOR}\"")
+  endif()
+
+  set(app_image_download_base "https://github.com/AppImage/AppImageKit/releases/download")
+
+  set(app_image_download_release "13")
 
   file(
     DOWNLOAD "${app_image_download_base}/${app_image_download_release}/AppRun-${app_image_arch}"
@@ -46,6 +46,18 @@ function(download_app_image_tool)
   )
 
   cmake_path(ABSOLUTE_PATH ARGV_DESTINATION BASE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}" NORMALIZE)
+
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+    set(app_image_arch aarch64)
+  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+    set(app_image_arch x86_64)
+  else()
+    message(FATAL_ERROR "Unsupported AppImage architecture \"${CMAKE_SYSTEM_PROCESSOR}\"")
+  endif()
+
+  set(app_image_download_base "https://github.com/AppImage/AppImageKit/releases/download")
+
+  set(app_image_download_release "13")
 
   file(
     DOWNLOAD "${app_image_download_base}/${app_image_download_release}/appimagetool-${app_image_arch}.AppImage"
