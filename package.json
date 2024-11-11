@@ -1,6 +1,6 @@
 {
   "name": "cmake-app-image",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AppImage packaging utilities for CMake",
   "files": [
     "*.cmake",
