@@ -1,4 +1,4 @@
-include_guard(GLOBAL)
+include_guard()
 
 set(app_image_module_dir "${CMAKE_CURRENT_LIST_DIR}")
 
