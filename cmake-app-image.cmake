@@ -21,7 +21,7 @@ function(download_app_image_run)
     message(FATAL_ERROR "Unsupported AppImage architecture \"${CMAKE_SYSTEM_PROCESSOR}\"")
   endif()
 
-  set(app_image_download_base "https://github.com/AppImage/appimagetool/releases/download")
+  set(app_image_download_base "https://github.com/AppImage/AppImageKit/releases/download")
 
   set(app_image_download_release "continuous")
 
@@ -55,9 +55,9 @@ function(download_app_image_tool)
     message(FATAL_ERROR "Unsupported AppImage architecture \"${CMAKE_SYSTEM_PROCESSOR}\"")
   endif()
 
-  set(app_image_download_base "https://github.com/AppImage/AppImageKit/releases/download")
+  set(app_image_download_base "https://github.com/AppImage/appimagetool/releases/download")
 
-  set(app_image_download_release "13")
+  set(app_image_download_release "continuous")
 
   file(
     DOWNLOAD "${app_image_download_base}/${app_image_download_release}/appimagetool-${app_image_arch}.AppImage"
